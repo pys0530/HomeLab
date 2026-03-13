@@ -1,0 +1,28 @@
+# infra-helm/network/tailscale/tailscale-k8s-operator-app.yaml
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: tailscale-operator
+  namespace: argocd
+spec:
+  project: default
+  sources:
+  - repoURL: https://pkgs.tailscale.com/helmcharts
+    chart: tailscale-operator
+    targetRevision: 1.94.2
+    helm:
+      valueFiles:
+      - $values/infra-helm/network/tailscale/tailscale-k8s-operator-values.yaml
+  - repoURL: git@github.com:pys0530/HomeLab
+    targetRevision: HEAD
+    ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: tailscale
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
