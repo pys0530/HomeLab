@@ -42,22 +42,9 @@ spec:
           service:
             name: argocd-server
             port:
-              number: 443
+              number: 80
   tls:
   - hosts:
     - argocd
 ---
 
-
-# apiVersion: networking.k8s.io/v1
-# kind: Ingress
-# metadata:
-#   name: argocd-tailscale-ingress
-#   namespace: argocd
-# spec:
-#   defaultBackend:
-#     service:
-#       name: argocd-server
-#       port:
-#         name: https
-#   ingressClassName: tailscale
