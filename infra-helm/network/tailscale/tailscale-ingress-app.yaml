@@ -25,12 +25,20 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: argocd-tailnet-ingress
+  name: argocd-tailscale-ingress
   namespace: argocd
 spec:
-  defaultBackend:
-    service:
-      name: argocd-server
-      port:
-        name: https
   ingressClassName: tailscale
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: argocd-server
+            port:
+              number: 80
+  tls:
+  - hosts:
+    - argocd
