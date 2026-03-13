@@ -175,7 +175,7 @@ persistence:
   # -- Replica count of the default Longhorn StorageClass.
   defaultClassReplicaCount: 1
   # -- Data locality of the default Longhorn StorageClass. (Options: "disabled", "best-effort")
-  defaultDataLocality: disabled
+  defaultDataLocality: best-effort
   # -- Reclaim policy that provides instructions for handling of a volume after its claim is released. (Options: "Retain", "Delete")
   reclaimPolicy: Delete
   # -- VolumeBindingMode controls when volume binding and dynamic provisioning should occur. (Options: "Immediate", "WaitForFirstConsumer") (Defaults to "Immediate")
@@ -249,13 +249,13 @@ defaultSettings:
   # -- Default data locality. A Longhorn volume has data locality if a local replica of the volume exists on the same node as the pod that is using the volume.
   defaultDataLocality: ~
   # -- Setting that allows scheduling on nodes with healthy replicas of the same volume. This setting is disabled by default.
-  replicaSoftAntiAffinity: ~
+  replicaSoftAntiAffinity: true
   # -- Setting that automatically rebalances replicas when an available node is discovered.
-  replicaAutoBalance: ~
+  replicaAutoBalance: best-effort
   # -- Percentage of storage that can be allocated relative to hard drive capacity. The default value is "100".
-  storageOverProvisioningPercentage: ~
+  storageOverProvisioningPercentage: 100
   # -- Percentage of minimum available disk capacity. When the minimum available capacity exceeds the total available capacity, the disk becomes unschedulable until more space is made available for use. The default value is "25".
-  storageMinimalAvailablePercentage: ~
+  storageMinimalAvailablePercentage: 10
   # -- Percentage of disk space that is not allocated to the default disk on each new Longhorn node.
   storageReservedPercentageForDefaultDisk: ~
   # -- Upgrade Checker that periodically checks for new Longhorn versions. When a new version is available, a notification appears on the Longhorn UI. This setting is enabled by default
@@ -265,7 +265,7 @@ defaultSettings:
   # -- The external URL used to access the Longhorn Manager API. When set, this URL is returned in API responses (the actions and links fields) instead of the internal pod IP. This is useful when accessing the API through Ingress or Gateway API HTTPRoute. Format: scheme://host[:port] (for example, https://longhorn.example.com or https://longhorn.example.com:8443). Leave it empty to use the default behavior.
   managerUrl: ~
   # -- Default number of replicas for volumes created using the Longhorn UI. For Kubernetes configuration, modify the `numberOfReplicas` field in the StorageClass. The default value is "{"v1":"3","v2":"3"}".
-  defaultReplicaCount: ~
+  defaultReplicaCount: 1
   # -- Default name of Longhorn static StorageClass. "storageClassName" is assigned to PVs and PVCs that are created for an existing Longhorn volume. "storageClassName" can also be used as a label, so it is possible to use a Longhorn StorageClass to bind a workload to an existing PV without creating a Kubernetes StorageClass object. "storageClassName" needs to be an existing StorageClass. The default value is "longhorn-static".
   defaultLonghornStaticStorageClass: ~
   # -- Number of minutes that Longhorn keeps a failed backup resource. When the value is "0", automatic deletion is disabled.
@@ -275,9 +275,9 @@ defaultSettings:
   # -- Setting that restores recurring jobs from a backup volume on a backup target and creates recurring jobs if none exist during backup restoration.
   restoreVolumeRecurringJobs: ~
   # -- Maximum number of successful recurring backup and snapshot jobs to be retained. When the value is "0", a history of successful recurring jobs is not retained.
-  recurringSuccessfulJobsHistoryLimit: ~
+  recurringSuccessfulJobsHistoryLimit: 1
   # -- Maximum number of failed recurring backup and snapshot jobs to be retained. When the value is "0", a history of failed recurring jobs is not retained.
-  recurringFailedJobsHistoryLimit: ~
+  recurringFailedJobsHistoryLimit: 1
   # -- Maximum number of snapshots or backups to be retained.
   recurringJobMaxRetention: ~
   # -- Maximum number of failed support bundles that can exist in the cluster. When the value is "0", Longhorn automatically purges all failed support bundles.
@@ -508,9 +508,9 @@ longhornDriver:
   #  label-key2: "label-value2"
 longhornUI:
   # -- Replica count for Longhorn UI.
-  replicas: 2
+  replicas: 1
   # -- PriorityClass for Longhorn UI.
-  priorityClass: *defaultPriorityClassNameRef
+  priorityClass: system-cluster-critical
   # -- Affinity for Longhorn UI pods. Specify the affinity you want to use for Longhorn UI.
   affinity:
     podAntiAffinity:
