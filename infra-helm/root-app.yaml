@@ -1,0 +1,25 @@
+# infra-helm/root-app.yaml
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: 0-infra
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: git@github.com:pys0530/HomeLab
+    targetRevision: HEAD
+    path: infra-helm
+    directory:
+      recurse: true
+      include: "*-app.yaml"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
