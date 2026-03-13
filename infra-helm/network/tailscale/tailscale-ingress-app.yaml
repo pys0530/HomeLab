@@ -1,31 +1,3 @@
-# ---
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: argocd
-#   namespace: argocd
-#   annotations:
-#     tailscale.com/hostname: "argocd"
-# spec:
-#   selector:
-#     app.kubernetes.io/name: argocd-server
-#     app.kubernetes.io/instance: argocd
-#   ports:
-#   - name: http
-#     protocol: TCP
-#     port: 80
-#     targetPort: 8080
-#   - name: https
-#     protocol: TCP
-#     port: 443
-#     targetPort: 8080
-#   type: LoadBalancer
-#   loadBalancerClass: tailscale
-# ---
-
-# 참고 문서
-# https://tailscale.com/docs/features/kubernetes-operator/how-to/cluster-ingress#exposing-cluster-workloads-using-a-kubernetes-ingress
-
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -48,3 +20,13 @@ spec:
     - argocd
 ---
 
+
+# 트러블슈팅 기록
+# 1. Tailscale LoadBalancer Servcie로는 443 포트(HTTPS) 서비스 할 수 없음
+# 해결 : Tailscale Ingress 사용
+#
+# 2. argocd 는 ssl-passthrough(ingress를 지나 argocd-server 까지 ssl이 필요)가 필요하나 tailscale에서는 불가능
+# 해결 : argocd-server를 insecure 모드로 재설치
+#
+# 참고 문서
+# https://tailscale.com/docs/features/kubernetes-operator/how-to/cluster-ingress#exposing-cluster-workloads-using-a-kubernetes-ingress
