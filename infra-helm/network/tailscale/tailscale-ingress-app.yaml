@@ -22,23 +22,19 @@
 #   type: LoadBalancer
 #   loadBalancerClass: tailscale
 # ---
+
+# 참고 문서
+# https://tailscale.com/docs/features/kubernetes-operator/how-to/cluster-ingress#exposing-cluster-workloads-using-a-kubernetes-ingress
+
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: argocd-tailscale-ingress
   namespace: argocd
 spec:
+  defaultBackend:
+    service:
+      name: argocd-server
+      port:
+        name: https
   ingressClassName: tailscale
-  rules:
-  - http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: argocd-server
-            port:
-              number: 80
-  tls:
-  - hosts:
-    - argocd
