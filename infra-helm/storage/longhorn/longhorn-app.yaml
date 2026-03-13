@@ -1,0 +1,28 @@
+# infra-helm/storage/longhorn/longhorn-app.yaml
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: longhorn
+  namespace: argocd
+spec:
+  project: default
+  sources:
+  - repoURL: https://charts.longhorn.io
+    chart: longhorn
+    targetRevision: 1.11.0
+    helm:
+      valueFiles:
+      - $values/infra-helm/storage/longhorn/longhorn-values.yaml
+  - repoURL: git@github.com:pys0530/HomeLab
+    targetRevision: HEAD
+    ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: longhorn
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
